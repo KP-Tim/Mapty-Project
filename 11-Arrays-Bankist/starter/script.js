@@ -98,9 +98,7 @@ const calcDisplaySummary = function (acc) {
 
 // display balance
 const calcDiplayBalance = function (acc) {
-  acc.balance = acc.movements.reduce((acc, cur, i, arr) => acc + cur, 0);
-  // create balance object
-  // acc.balance = balance;
+  acc.balance = movements.reduce((acc, cur, i, arr) => acc + cur, 0);
   labelBalance.textContent = `${acc.balance} 💶`;
 };
 
@@ -115,7 +113,14 @@ const createUsernames = function (accs) {
   });
 };
 createUsernames(accounts);
-
+const updateUI = function (acc) {
+  //display movements
+  calcDisplayMovements(acc.movements);
+  //display balance
+  calcDiplayBalance(acc);
+  //display summary
+  calcDisplaySummary(acc);
+};
 // Event handler
 let currentAccount;
 
@@ -136,13 +141,8 @@ btnLogin.addEventListener('click', function (e) {
     // blur fields
     inputLoginPin.blur();
     inputLoginUsername.blur();
-    //display movements
-    calcDisplayMovements(currentAccount.movements);
-    //display balance
-    calcDiplayBalance(currentAccount);
-    //display summary
-    calcDisplaySummary(currentAccount);
-    console.log(currentAccount);
+    // update UI
+    updateUI(currentAccount);
   }
 });
 
@@ -153,10 +153,21 @@ btnTransfer.addEventListener('click', function (e) {
     acc => acc.username === inputTransferTo.value
   );
   console.log(receiverAcc, amount);
-  // if (amount > 0 && )
+  if (
+    amount > 0 &&
+    amount < currentAccount.balance &&
+    receiverAcc &&
+    receiverAcc?.username !== currentAccount.username
+  ) {
+    // Doing the transfer
+    currentAccount.movements.push(-amount);
+    receiverAcc.movements.push(amount);
+    // update UI
+    updateUI(currentAccount);
+    console.log('login transfer');
+  }
 });
-// test
-// testing gitlens commmit
+
 // btnLogin.addEventListener('click', function (e) {
 //   // Prevent form from submitting
 //   e.preventDefault();
