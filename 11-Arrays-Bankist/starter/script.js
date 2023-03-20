@@ -168,7 +168,34 @@ btnTransfer.addEventListener('click', function (e) {
     receiverAcc.movements.push(amount);
     // Update UI
     updateUI(currentAccount);
-    console.log('login transfer');
+  }
+});
+
+btnLoan.addEventListener('click', function (e) {
+  e.preventDefault();
+  const amount = Number(inputLoanAmount.value);
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    // Add movement
+    currentAccount.movements.push(amount);
+    updateUI(currentAccount);
+  }
+  inputLoanAmount.value = '';
+});
+
+btnClose.addEventListener('click', function (e) {
+  e.preventDefault();
+  if (
+    currentAccount.username === inputCloseUsername.value &&
+    currentAccount.pin === Number(inputClosePin.value)
+  ) {
+    const index = accounts.findIndex(
+      acc => (acc.username = currentAccount.username)
+    );
+    // Delete account
+    accounts.splice(index, 1);
+    // Hide UI
+    containerApp.style.opacity = 0;
+    inputCloseUsername.value = inputClosePin.value = '';
   }
 });
 
@@ -220,6 +247,10 @@ btnTransfer.addEventListener('click', function (e) {
 /////////////////////////////////////////////////
 // LECTURES
 
+const owners = ['Jonas', 'Zach', 'Adam', 'Martha'];
+
+// console.log(owners.sort());
+
 const currencies = new Map([
   ['USD', 'United States dollar'],
   ['EUR', 'Euro'],
@@ -238,22 +269,67 @@ const currencies = new Map([
 // console.log(currencie);
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
+// return < 0, A, B
+// return > 0, B, A
+// movements.sort((a, b) => {
+//   if (a > b) return 1;
+//   if (a < b) return -1;
+// });
+
+movements.sort((a, b) => {
+  return a - b;
+});
+
+console.log(movements);
+
+const arr = [3, 1, 4, 1, 5, 9];
+const compareFn = (a, b) => (a > b ? 1 : 0);
+console.log(arr.sort(compareFn));
+
+// const flatma = accounts.map(mov => mov.movements);
+// console.log(flatma);
+
+// const accountMovements = accounts
+//   .map(mov => mov.movements)
+//   .flat(1)
+//   .reduce((acc, cur) => acc + cur, 0);
+// const accountMovementss = accounts
+//   .flatMap(mov => mov.movements)
+//   .reduce((acc, cur) => acc + cur, 0);
+// console.log(accountMovements);
+// console.log(accountMovementss);
+// const arr = [[1, 2, 3], [[4, 5], 6], 7, 8];
+// console.log(arr.flat());
+// console.log(arr.flat(2));
+
+// const deposit = mov => mov > 0;
+
+// console.log(movements.some(deposit));
+// movements.every(deposit);
+// movements.filter(deposit);
+
+// const some = movements.some(mov => mov > 5000);
+
+// const include = movements.includes(-650);
+
+// console.log(include);
+
 // find method
 // const account = accounts.find(acc => acc.owner === 'Jessica Davis');
 // console.log(account);
 
 // find using for of loop
 
-let forOf = [];
-// const forOfAccount =
-for (const acc of movements) {
-  if (acc < 0) {
-    forOf = acc;
-    break;
-  }
-}
+// let forOf = [];
+// // const forOfAccount =
+// for (const acc of movements) {
+//   if (acc < 0) {
+//     forOf = acc;
+//     break;
+//   }
+// }
 
-console.log(forOf);
+// console.log(forOf);
 
 // filter method to find
 // const filterAccount = accounts.filter(mov => mov.owner === 'Jessica Davis');
