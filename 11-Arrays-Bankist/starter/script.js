@@ -168,21 +168,7 @@ btnTransfer.addEventListener('click', function (e) {
     receiverAcc.movements.push(amount);
     // Update UI
     updateUI(currentAccount);
-  }
-});
-
-btnClose.addEventListener('click', function (e) {
-  e.preventDefault();
-  console.log('');
-  if (
-    currentAccount.username === inputCloseUsername.value &&
-    currentAccount.pin === Number(inputClosePin.value)
-  ) {
-    const index = accounts.findIndex(
-      acc => acc.username === currentAccount.username
-    );
-    console.log(index);
-    accounts.splice(index, 1);
+    console.log('login transfer');
   }
 });
 
