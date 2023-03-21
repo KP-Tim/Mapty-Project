@@ -61,9 +61,12 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-const calcDisplayMovements = function (movement) {
+const calcDisplayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = '';
-  movement.forEach(function (mov, i) {
+
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+
+  movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
     const html = `
     <div class="movements__row">
@@ -76,6 +79,7 @@ const calcDisplayMovements = function (movement) {
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
 };
+
 // display UI
 
 // display summary
