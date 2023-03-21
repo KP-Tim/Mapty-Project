@@ -203,6 +203,14 @@ btnClose.addEventListener('click', function (e) {
   }
 });
 
+let sorted;
+
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+  calcDisplayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted;
+});
+
 // btnLogin.addEventListener('click', function (e) {
 //   // Prevent form from submitting
 //   e.preventDefault();
@@ -273,6 +281,80 @@ const currencies = new Map([
 // console.log(currencie);
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
+// 1. sum of all deposits
+const bankDepositSum = accounts
+  .flatMap(mov => mov.movements)
+  .filter(mov => mov > 0)
+  .reduce((sum, cur) => sum + cur, 0);
+console.log(bankDepositSum);
+
+// 2.  how many deposits with atleast $1000
+const depositOver1000 = accounts
+  .flatMap(mov => mov.movements)
+  .filter(mov => mov >= 1000).length;
+console.log(depositOver1000);
+
+// 2.1 same question but using reduce method
+const depositOver1000Reduce = accounts
+  .flatMap(mov => mov.movements)
+  .reduce((count, cur) => (cur >= 1000 ? ++count : count), 0);
+console.log(depositOver1000Reduce);
+
+// 3. created an object which contains sum of deposits and withdrawals
+const sums = accounts
+  .flatMap(mov => mov.movements)
+  .reduce(
+    (sum, cur) => {
+      // cur > 0 ? (sum.deposit += cur) : (sum.withdrawal += cur);
+      // return sum;
+      sum[cur > 0 ? 'deposit' : 'withdrawal'] += cur;
+      return sum;
+    },
+    { deposit: 0, withdrawal: 0 }
+  );
+
+console.log(sums);
+
+// const sums = accounts
+//   .flatMap(mov => mov.movements)
+//   .reduce(
+//     (sum, cur) => {
+//       cur > 0 ? (sum.deposit += cur) : (sum.withdrawals += cur);
+//       return sum;
+//     },
+//     { deposit: 0, withdrawals: 0 }
+//   );
+// console.log(sums);
+
+// const movementsUI = Array.from(document.querySelectorAll('.movements__value'));
+// console.log(movementsUI);
+
+// labelBalance.addEventListener('click', function (e) {
+//   e.preventDefault();
+//   const els = Array.from(document.querySelectorAll('.movements__value'), e =>
+//     Number(e.textContent.replace('💶', ''))
+//   );
+//   console.log(els);
+// });
+
+// const x = new Array(3);
+// console.log(x);
+// const y = x.fill(9);
+// console.log(y);
+
+// const d = new Array(5).fill(8);
+// console.log(d);
+// const z = Array.from({ length: 7 }, () => 1);
+// console.log(z);
+
+// const a = Array.from({ length: 7 }, (_, i) => i + 1);
+// console.log(a);
+
+// const random100 = Array.from({ length: 100 }, (_, i) =>
+//   Math.floor(Math.random() * 100)
+// );
+
+// console.log(random100);
 // return < 0, A, B
 // return > 0, B, A
 // movements.sort((a, b) => {
@@ -280,15 +362,15 @@ const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 //   if (a < b) return -1;
 // });
 
-movements.sort((a, b) => {
-  return a - b;
-});
+// movements.sort((a, b) => {
+//   return a - b;
+// });
 
-console.log(movements);
+// console.log(movements);
 
-const arr = [3, 1, 4, 1, 5, 9];
-const compareFn = (a, b) => (a > b ? 1 : 0);
-console.log(arr.sort(compareFn));
+// const arr = [3, 1, 4, 1, 5, 9];
+// const compareFn = (a, b) => (a > b ? 1 : 0);
+// console.log(arr.sort(compareFn));
 
 // const flatma = accounts.map(mov => mov.movements);
 // console.log(flatma);
