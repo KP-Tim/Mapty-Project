@@ -286,44 +286,106 @@ const bankDepositSum = accounts
   .flatMap(mov => mov.movements)
   .filter(mov => mov > 0)
   .reduce((sum, cur) => sum + cur, 0);
-console.log(bankDepositSum);
+// console.log(bankDepositSum);
 
 // 2.  how many deposits with atleast $1000
 const depositOver1000 = accounts
   .flatMap(mov => mov.movements)
   .filter(mov => mov >= 1000).length;
-console.log(depositOver1000);
+// console.log(depositOver1000);
 
 // 2.1 same question but using reduce method
 const depositOver1000Reduce = accounts
   .flatMap(mov => mov.movements)
   .reduce((count, cur) => (cur >= 1000 ? ++count : count), 0);
-console.log(depositOver1000Reduce);
+// console.log(depositOver1000Reduce);
 
 // 3. created an object which contains sum of deposits and withdrawals
+
 const sums = accounts
   .flatMap(mov => mov.movements)
   .reduce(
     (sum, cur) => {
-      // cur > 0 ? (sum.deposit += cur) : (sum.withdrawal += cur);
-      // return sum;
-      sum[cur > 0 ? 'deposit' : 'withdrawal'] += cur;
+      // cur > 0 ? (sum.Deposit += cur) : (sum.Withdrawal += cur);
+      sum[cur > 0 ? 'Deposit' : 'Withdrawal'] += cur;
       return sum;
     },
-    { deposit: 0, withdrawal: 0 }
+    { Deposit: 0, Withdrawal: 0 }
   );
 
-console.log(sums);
+// console.log(sums);
+
+// 4. this is a nice title --> This Is a Nice Title
+
+const convertTitleCase = function (title) {
+  const capitalize = str => str[0].toUpperCase() + str.slice(1);
+  const exceptions = ['a', 'an', 'and', 'the', 'but', 'or', 'on', 'in', 'with'];
+  const titleCase = title
+    .toLowerCase()
+    .split(' ')
+    .map(word => (exceptions.includes(word) ? word : capitalize(word)))
+    .join(' ');
+
+  return capitalize(titleCase);
+};
+
+// console.log(convertTitleCase('this is a nice title'));
+// console.log(convertTitleCase('this is a LONG title but not too long'));
+// console.log(convertTitleCase('and here is another title with an EXAMPLE'));
+
+// 4 Challenge
+const dogs = [
+  { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
+  { weight: 8, curFood: 200, owners: ['Matilda'] },
+  { weight: 13, curFood: 275, owners: ['Sarah', 'John'] },
+  { weight: 32, curFood: 340, owners: ['Michael'] },
+];
+console.log(dogs);
+// 1 Arrow forEach function
+dogs.forEach(
+  dog => (dog.recommendedFood = Math.trunc(dog.weight ** 0.75 * 28))
+);
+
+// 2 Sarar's dog
+const sarahDog = dogs.find(dog => dog.owners.includes('Sarah'));
+console.log(
+  `Sarah's dog is eating too ${
+    sarahDog.curFood > sarahDog.recommendedFood ? 'much.' : 'little'
+  }`
+);
+
+// 3 create arrays ('ownersEatTooMuch')('ownersEatTooLittle')
+const ownersEatTooMuch = dogs
+  .filter(dog => dog.curFood > dog.recommendedFood)
+  .flatMap(owner => owner.owners);
+const ownersEatTooLittle = dogs
+  .filter(dog => dog.curFood < dog.recommendedFood)
+  .flatMap(owner => owner.owners);
+console.log(ownersEatTooMuch, ownersEatTooLittle);
+
+// 4 String answer 3
+console.log(
+  `${ownersEatTooMuch.join(
+    ' and '
+  )}'s dogs eat too much! and ${ownersEatTooLittle.join(
+    ' and '
+  )}'s dogs eat too little!`
+);
+
+// 5
 
 // const sums = accounts
 //   .flatMap(mov => mov.movements)
 //   .reduce(
 //     (sum, cur) => {
-//       cur > 0 ? (sum.deposit += cur) : (sum.withdrawals += cur);
+//       // cur > 0 ? (sum.deposit += cur) : (sum.withdrawal += cur);
+//       // return sum;
+//       sum[cur > 0 ? 'deposit' : 'withdrawal'] += cur;
 //       return sum;
 //     },
-//     { deposit: 0, withdrawals: 0 }
+//     { deposit: 0, withdrawal: 0 }
 //   );
+
 // console.log(sums);
 
 // const movementsUI = Array.from(document.querySelectorAll('.movements__value'));
