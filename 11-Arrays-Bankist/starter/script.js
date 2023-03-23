@@ -333,46 +333,67 @@ const convertTitleCase = function (title) {
 // console.log(convertTitleCase('this is a LONG title but not too long'));
 // console.log(convertTitleCase('and here is another title with an EXAMPLE'));
 
-// 4 Challenge
+// Coding Challenge #4
 const dogs = [
   { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
   { weight: 8, curFood: 200, owners: ['Matilda'] },
   { weight: 13, curFood: 275, owners: ['Sarah', 'John'] },
   { weight: 32, curFood: 340, owners: ['Michael'] },
 ];
-console.log(dogs);
+// console.log(dogs);
 // 1 Arrow forEach function
 dogs.forEach(
   dog => (dog.recommendedFood = Math.trunc(dog.weight ** 0.75 * 28))
 );
 
+// console.log(dogs.map(mov => mov));
+const sortDogs = dogs
+  .slice()
+  .sort((a, b) => a.recommendedFood - b.recommendedFood);
+
+// console.log(sortDogs);
+// sort((a, b) => a - b)
+
 // 2 Sarar's dog
-const sarahDog = dogs.find(dog => dog.owners.includes('Sarah'));
-console.log(
-  `Sarah's dog is eating too ${
-    sarahDog.curFood > sarahDog.recommendedFood ? 'much.' : 'little'
-  }`
-);
+// const sarahDog = dogs.find(dog => dog.owners.includes('Sarah'));
+// console.log(
+//   `Sarah's dog is eating too ${
+//     sarahDog.curFood > sarahDog.recommendedFood ? 'much.' : 'little'
+//   }`
+// );
 
 // 3 create arrays ('ownersEatTooMuch')('ownersEatTooLittle')
-const ownersEatTooMuch = dogs
-  .filter(dog => dog.curFood > dog.recommendedFood)
-  .flatMap(owner => owner.owners);
-const ownersEatTooLittle = dogs
-  .filter(dog => dog.curFood < dog.recommendedFood)
-  .flatMap(owner => owner.owners);
-console.log(ownersEatTooMuch, ownersEatTooLittle);
+// const ownersEatTooMuch = dogs
+//   .filter(dog => dog.curFood > dog.recommendedFood)
+//   .flatMap(owner => owner.owners);
+// const ownersEatTooLittle = dogs
+//   .filter(dog => dog.curFood < dog.recommendedFood)
+//   .flatMap(owner => owner.owners);
+// console.log(ownersEatTooMuch, ownersEatTooLittle);
 
 // 4 String answer 3
-console.log(
-  `${ownersEatTooMuch.join(
-    ' and '
-  )}'s dogs eat too much! and ${ownersEatTooLittle.join(
-    ' and '
-  )}'s dogs eat too little!`
-);
+// console.log(
+//   `${ownersEatTooMuch.join(
+//     ' and '
+//   )}'s dogs eat too much! and ${ownersEatTooLittle.join(
+//     ' and '
+//   )}'s dogs eat too little!`
+// );
 
-// 5
+// 5 exactly the amount of food
+// console.log(dogs.some(dog => dog.curFood === dog.recommendedFood));
+
+// 6 ok amount of food
+// const checkOkDogs = dog =>
+//   dog.curFood > dog.recommendedFood * 0.9 &&
+//   dog.curFood < dog.recommendedFood * 1.1;
+
+// console.log(dogs.some(checkOkDogs));
+// 7 Create an array for number 6
+
+// console.log(dogs.filter(checkOkDogs));
+
+// 8 Shallow copy in an ascending order
 
 // const sums = accounts
 //   .flatMap(mov => mov.movements)
