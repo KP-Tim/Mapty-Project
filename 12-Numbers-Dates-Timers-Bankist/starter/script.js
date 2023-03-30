@@ -223,14 +223,35 @@ const updateUI = function (acc) {
   calcDisplaySummary(acc);
 };
 
+const startLogOutTimer = function () {
+  const tick = function () {
+    const min = String(Math.trunc(time / 60)).padStart(2, 0);
+    const sec = String(time % 60).padStart(2, 0);
+    labelTimer.textContent = `${min}:${sec}`;
+
+    if (time === 0) {
+      containerApp.style.opacity = 0;
+      labelWelcome.textContent = 'Log in to get started';
+      clearInterval(timer);
+    }
+
+    time--;
+  };
+  let time = 5 * 60;
+  tick();
+  // const timerID = setInterval(tick, 1000);
+
+  return setInterval(tick, 1000);
+};
+
 ///////////////////////////////////////
 // Event handlers
-let currentAccount;
+let currentAccount, timer;
 
 // FAKE ALWAYS LOGGED IN
-currentAccount = account1;
-updateUI(currentAccount);
-containerApp.style.opacity = 100;
+// currentAccount = account1;
+// updateUI(currentAccount);
+// containerApp.style.opacity = 100;
 
 // day/month/year
 btnLogin.addEventListener('click', function (e) {
@@ -268,19 +289,13 @@ btnLogin.addEventListener('click', function (e) {
       options
     ).format(date);
 
-    // Create current date and time
-    // const date = new Date();
-    // const day = `${date.getDate()}`.padStart(2, 0);
-    // const month = `${date.getMonth() + 1}`.padStart(2, 0);
-    // const year = date.getFullYear();
-    // const hour = `${date.getHours()}`.padStart(2, 0);
-    // const min = `${date.getMinutes()}`.padStart(2, 0);
-    // labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`;
-
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
-
+    // check timer
+    if (timer) clearInterval(timer);
+    // Logout timer starts
+    timer = startLogOutTimer();
     // Update UI
     updateUI(currentAccount);
   }
@@ -367,6 +382,33 @@ btnSort.addEventListener('click', function (e) {
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
+
+// setInterval(function () {
+//   const now = new Date();
+//   const nownow = Intl.DateTimeFormat('en-US', {
+//     hour12: true,
+//     hour: 'numeric',
+//     minute: 'numeric',
+//     second: 'numeric',
+//   }).format(now);
+//   console.log(nownow);
+// }, 1000);
+
+// setTimeout(function () {
+//   const now = new Date();
+//   console.log(now);
+// }, 1000);
+
+// setInterval(() => {
+//   const now = new Date();
+//   const nownow = new Intl.DateTimeFormat('en-US', {
+//     hour12: true,
+//     hour: 'numeric',
+//     minute: 'numeric',
+//     second: 'numeric',
+//   }).format(now);
+//   console.log(nownow);
+// }, 1000);
 
 // const ingredients = ['olives', 'spinach'];
 
