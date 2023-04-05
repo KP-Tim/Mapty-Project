@@ -223,30 +223,52 @@ const updateUI = function (acc) {
   calcDisplaySummary(acc);
 };
 
+// const startLogOutTimer = function () {
+//   const tick = function () {
+//     const min = String(Math.trunc(time / 60)).padStart(2, 0);
+//     const sec = String(time % 60).padStart(2, 0);
+//     labelTimer.textContent = `${min}:${sec}`;
+
+//     if (time === 0) {
+//       containerApp.style.opacity = 0;
+//       labelWelcome.textContent = 'Log in to get started';
+//       clearInterval(timer);
+//     }
+
+//     time--;
+//   };
+//   let time = 5 * 60;
+//   tick();
+//   // const timerID = setInterval(tick, 1000);
+
+//   return setInterval(tick, 1000);
+// };
+
 const startLogOutTimer = function () {
+  // create time
+  let time = 5 * 60;
   const tick = function () {
     const min = String(Math.trunc(time / 60)).padStart(2, 0);
     const sec = String(time % 60).padStart(2, 0);
+    // display time
     labelTimer.textContent = `${min}:${sec}`;
-
+    // stop time when 0
     if (time === 0) {
-      containerApp.style.opacity = 0;
       labelWelcome.textContent = 'Log in to get started';
       clearInterval(timer);
+      containerApp.style.opacity = 0;
     }
-
+    // decrease time
     time--;
   };
-  let time = 5 * 60;
   tick();
-  // const timerID = setInterval(tick, 1000);
-
-  return setInterval(tick, 1000);
+  const timer = setInterval(tick, 1000);
+  return timer;
 };
 
 ///////////////////////////////////////
 // Event handlers
-let currentAccount, timer;
+let currentAccount, globalTimer;
 
 // FAKE ALWAYS LOGGED IN
 // currentAccount = account1;
@@ -292,10 +314,12 @@ btnLogin.addEventListener('click', function (e) {
     // Clear input fields
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
-    // check timer
-    if (timer) clearInterval(timer);
+
+    // if timer clear
+    if (globalTimer) clearInterval(globalTimer);
+
     // Logout timer starts
-    timer = startLogOutTimer();
+    globalTimer = startLogOutTimer();
     // Update UI
     updateUI(currentAccount);
   }
@@ -325,6 +349,9 @@ btnTransfer.addEventListener('click', function (e) {
 
     // Update UI
     updateUI(currentAccount);
+    // Rest timer
+    clearInterval(globalTimer);
+    globalTimer = startLogOutTimer();
   }
 });
 
@@ -343,6 +370,9 @@ btnLoan.addEventListener('click', function (e) {
 
       // Update UI
       updateUI(currentAccount);
+      // Rest timer
+      clearInterval(globalTimer);
+      globalTimer = startLogOutTimer();
     }, 3000);
     // Add movement
   }
