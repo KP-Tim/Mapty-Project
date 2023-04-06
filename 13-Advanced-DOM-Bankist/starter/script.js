@@ -95,6 +95,45 @@ nav.addEventListener('mouseover', handleover.bind(0.5));
 
 nav.addEventListener('mouseout', handleover.bind(1));
 
+const navHeight = nav.getBoundingClientRect().height;
+console.log(navHeight);
+
+const sticky = function (entries, observer) {
+  const [entry] = entries;
+  console.log(entry);
+
+  if (!entry.isIntersecting) {
+    nav.classList.add('sticky');
+  } else {
+    nav.classList.remove('sticky');
+  }
+};
+
+const obsOptions = {
+  root: null,
+  threshold: 0,
+};
+
+const headerObserver = new IntersectionObserver(sticky, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px`,
+});
+
+headerObserver.observe(header);
+
+// const obsCallback = function (entries, observer) {
+//   entries.forEach(entry => console.log(entry));
+// };
+
+// const obsOptions = {
+//   root: null,
+//   threshold: 0.1,
+// };
+
+// const observer = new IntersectionObserver(obsCallback, obsOptions);
+// observer.observe(section1);
+
 // const intialCoords = section1.getBoundingClientRect();
 // console.log(intialCoords);
 
