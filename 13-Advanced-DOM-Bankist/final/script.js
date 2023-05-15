@@ -294,6 +294,23 @@ slider();
 ///////////////////////////////////////
 ///////////////////////////////////////
 
+// Fires after HTML loads
+document.addEventListener('DOMContentLoaded', function (e) {
+  console.log(e);
+});
+
+// Fires after page is fully loaded
+window.addEventListener('load', function (e) {
+  console.log('Page Load Complete:', e);
+});
+
+// Ask when you try to exit out from browser
+// window.addEventListener('beforeunload', function (e) {
+//   e.preventDefault();
+//   console.log(e);
+//   e.returnValue = '';
+// });
+
 /*
 ///////////////////////////////////////
 // Selecting, Creating, and Deleting Elements

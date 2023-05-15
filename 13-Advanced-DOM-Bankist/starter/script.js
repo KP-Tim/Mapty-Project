@@ -11,6 +11,15 @@ const nav = document.querySelector('.nav');
 const tabs = document.querySelectorAll('.operations__tab');
 const tabsContainer = document.querySelector('.operations__tab-container');
 const tabsContent = document.querySelectorAll('.operations__content');
+const allSections = document.querySelectorAll('.section');
+const sec = document.getElementById('section--1');
+const allButtons = document.getElementsByTagName('button');
+const slides = document.querySelectorAll('.slide');
+const slider = document.querySelector('.slider');
+const btnRight = document.querySelector('.slider__btn--right');
+const btnLeft = document.querySelector('.slider__btn--left');
+const imgTargets = document.querySelectorAll('img[data-src]');
+const dotContainer = document.querySelector('.dots');
 ///////////////////////////////////////
 // Modal window
 
@@ -25,9 +34,477 @@ const closeModal = function () {
   overlay.classList.add('hidden');
 };
 
+btnScrollTo.addEventListener('click', function () {
+  section1.scrollIntoView({ behavior: 'smooth' });
+});
+
+document.querySelector('.nav__links').addEventListener('click', function (e) {
+  e.preventDefault();
+  // console.log(e.target);
+  // console.log(e.currentTarget);
+  // const link = e.target.getAttribute('href');
+  if (e.target.classList.contains('nav__link')) {
+    const link = document.querySelector(e.target.getAttribute('href'));
+    link.scrollIntoView({ behavior: 'smooth' });
+  }
+});
+
+tabsContainer.addEventListener('click', function (e) {
+  const clicked = e.target.closest('.operations__tab');
+  // console.log(clicked);
+  const allTabs = e.currentTarget.children;
+  const activeContent = e.target.getAttribute('data-tab');
+  // console.log(activeContent);
+  // console.log(clicked.dataset.tab);
+  // Guard clause
+  if (!clicked) return;
+  // Remove active classes
+  tabs.forEach(function (el) {
+    el.classList.remove('operations__tab--active');
+  });
+  tabsContent.forEach(el => el.classList.remove('operations__content--active'));
+  // Activate tabs
+  clicked.classList.add('operations__tab--active');
+  // Activate contents
+  document
+    .querySelector(`.operations__content--${activeContent}`)
+    .classList.add('operations__content--active');
+});
+
+// Menu fade animations
+const handleHover = function (e) {
+  if (e.target.classList.contains('nav__link')) {
+    const link = e.target;
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+    const logo = link.closest('.nav').querySelector('img');
+    siblings.forEach(el => {
+      if (el !== link) el.style.opacity = this;
+    });
+    logo.style.opacity = this;
+  }
+};
+
+nav.addEventListener('mouseover', handleHover.bind(0.5));
+
+nav.addEventListener('mouseout', handleHover.bind(1));
+
+// Create sticky Navbar the right way using new IntersectionObserver API
+const navHeight = nav.getBoundingClientRect().height;
+// console.log(navHeight);
+const stickyNav = function (entries) {
+  const [entry] = entries;
+  // console.log(entry);
+  if (!entry.isIntersecting) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+};
+
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px`,
+});
+
+headerObserver.observe(header);
+
+// Reveal sections
+const revealSection = function (entries, observer) {
+  const [entry] = entries;
+  // console.log(entry);
+  if (!entry.isIntersecting) return;
+  entry.target.classList.remove('section--hidden');
+  observer.unobserve(entry.target);
+};
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.15,
+});
+allSections.forEach(function (section) {
+  sectionObserver.observe(section);
+  // section.classList.add('section--hidden');
+});
+
+// Lazy loading images
+
+const revealImg = function (entries, observer) {
+  const [entry] = entries;
+  // console.log(entry);
+  if (!entry.isIntersecting) return;
+  entry.target.src = entry.target.dataset.src;
+  entry.target.addEventListener('load', function () {
+    entry.target.classList.remove('lazy-img');
+  });
+  observer.unobserve(entry.target);
+};
+
+const imgObserver = new IntersectionObserver(revealImg, {
+  root: null,
+  threshold: 0.15,
+});
+
+imgTargets.forEach(img => imgObserver.observe(img));
+
+// Slider
+let curSlide = 0;
+const maxSlide = slides.length - 1;
+
+// Create dots function
+const createDots = function () {
+  slides.forEach(function (_, i) {
+    dotContainer.insertAdjacentHTML(
+      'beforeend',
+      `<button class="dots__dot" data-slide="${i}"></button>`
+    );
+  });
+};
+
+// Create active dots function
+const activateDot = function (slide) {
+  document.querySelectorAll('.dots__dot').forEach(function (dot) {
+    dot.classList.remove('dots__dot--active');
+  });
+  document
+    .querySelector(`.dots__dot[data-slide="${slide}"]`)
+    .classList.add('dots__dot--active');
+};
+
+// Speads slides function
+const gotoSlide = function (slide) {
+  slides.forEach(
+    (s, i) => (s.style.transform = `translateX(${100 * (i - slide)}%)`)
+  );
+};
+
+// Next slide function
+const nextSlide = function () {
+  if (curSlide === maxSlide) {
+    curSlide = 0;
+  } else {
+    curSlide++;
+  }
+  gotoSlide(curSlide);
+  activateDot(curSlide);
+};
+
+// Previous slide function
+const prevSlide = function () {
+  if (curSlide === 0) {
+    curSlide = maxSlide;
+  } else {
+    curSlide--;
+  }
+  gotoSlide(curSlide);
+  activateDot(curSlide);
+};
+
+const init = function () {
+  gotoSlide(0);
+  activateDot(0);
+  createDots();
+};
+init();
+
+// slider.style.overflow = 'visible';
+btnRight.addEventListener('click', nextSlide);
+btnLeft.addEventListener('click', prevSlide);
+
+// Keydown to slide
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'ArrowLeft') prevSlide();
+  e.key === 'ArrowRight' && nextSlide();
+});
+
+// Dots to slide
+document.querySelector('.dots').addEventListener('click', function (e) {
+  if (e.target.classList.contains('dots__dot')) {
+    // const slide = e.target.dataset.slide;
+    const { slide } = e.target.dataset;
+    gotoSlide(slide);
+    activateDot(slide);
+  }
+});
+
+/////////////////////////////////////////////////////////////////////
+/*
+// Slider
+const slider = document.querySelector('.slider');
+const btnLeft = document.querySelector('.slider__btn--left');
+const btnRight = document.querySelector('.slider__btn--right');
+
+let curSlide = 0;
+const maxSlide = slides.length - 1;
+// slides.forEach((s, i) => (s.style.transform = `translateX(${100 * i}%)`));
+// gotoSlide();
+
+slider.style.overflow = 'visible';
+
+const gotoSlide = function (slide) {
+  slides.forEach(
+    (s, i) => (s.style.transform = `translateX(${100 * (i - slide)}%)`)
+  );
+};
+gotoSlide(0);
+
+const nextSlide = function () {
+  if (curSlide === maxSlide) {
+    curSlide = 0;
+  } else {
+    curSlide++;
+  }
+  gotoSlide(curSlide);
+};
+
+const prevSlide = function () {
+  if (curSlide === 0) {
+    curSlide = maxSlide;
+  } else {
+    curSlide--;
+  }
+  gotoSlide(curSlide);
+};
+
+btnRight.addEventListener('click', nextSlide);
+
+gotoSlide(curSlide);
+
+btnLeft.addEventListener('click', prevSlide);
+&/
+/////////////////////////////////////////////////////////////////
+// let curSlide = 0;
+// const maxSlide = slides.length - 1;
+// console.log(maxSlide);
+
+// slides.forEach((s, i) => (s.style.transform = `translateX(${100 * i}%)`));
+
+// slider.style.overflow = 'visible';
+
+// // Go to next slide
+// btnRight.addEventListener('click', function () {
+//   if (curSlide === maxSlide) {
+//     curSlide = 0;
+//   } else {
+//     curSlide++;
+//   }
+
+//   slides.forEach(
+//     (s, i) => (s.style.transform = `translateX(${100 * (i - curSlide)}%)`)
+//   );
+// });
+
+// const imgTargets = document.querySelectorAll('img[data-src]');
+// // console.log(imgTargets);
+
+// const revealImage = function (entries, observer) {
+//   const [entry] = entries;
+//   console.log(entry);
+//   if (!entry.isIntersecting) return;
+//   entry.target.src = entry.target.dataset.src;
+//   entry.target.addEventListener('load', function () {
+//     entry.target.classList.remove('lazy-img');
+//   });
+//   observer.unobserve(entry.target);
+// };
+// const imgObserver = new IntersectionObserver(revealImage, {
+//   root: null,
+//   threshold: 0,
+//   rootMargin: '200px',
+// });
+
+// imgTargets.forEach(img => imgObserver.observe(img));
+
+// const obsCallback = function (entries, observer) {
+//   entries.forEach(entry => {
+//     console.log(entry);
+//     if (!entry.isIntersecting) nav.classList.add('sticky');
+//     else nav.classList.remove('sticky');
+//   });
+// };
+// const obsOptions = {
+//   root: null,
+//   threshold: 0,
+//   rootMargin: `-${navHeight}px`,
+// };
+
+// const observer = new IntersectionObserver(obsCallback, obsOptions);
+
+// observer.observe(header);
+
+// Create sticky on Navbar - The old way
+/*
+const intialCoords = section1.getBoundingClientRect();
+
+window.addEventListener('scroll', function () {
+  console.log(intialCoords.top);
+  console.log(window.scrollY);
+  if (window.scrollY > intialCoords.top) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+});
+*/
+
+// nav.classList.add('sticky');
+
+/*
+// Menu fade animation
+const handleHover = function (e) {
+  if (e.target.classList.contains('nav__link')) {
+    const link = e.target;
+    const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+    const logo = link.closest('.nav').querySelector('img');
+    siblings.forEach(el => {
+      console.log(this);
+      if (el !== link) el.style.opacity = this;
+    });
+    // siblings.forEach(function (el) {
+    //   console.log(this);
+    //   if (el !== link) el.style.opacity = this;
+    // });
+
+    logo.style.opacity = this;
+  }
+};
+
+// Menu fades
+nav.addEventListener('mouseover', handleHover.bind(0.5));
+// nav.addEventListener('mouseover', function (e) {
+//   handleHover(e, 0.5);
+// });
+
+// Menu unfades
+nav.addEventListener('mouseout', handleHover.bind(1));
+// nav.addEventListener('mouseout', function (e) {
+//   handleHover(e, 1);
+// });
+
+/*
+
+// const h1 = document.querySelector('h1');
+
+// console.log(h1);
+// // console.log(h1.children);
+// // console.log(h1.childNodes);
+// console.log(h1.firstElementChild);
+// console.log(h1.lastElementChild);
+
+// h1.firstElementChild.style.color = 'white';
+
+// console.log(h1.parentNode);
+// console.log(h1.parentElement);
+// console.log(h1.closest('.header'));
+// console.log(h1.closest('body'));
+// console.log(h1.previousElementSibling);
+// console.log(h1.nextElementSibling);
+// console.log(h1.parentElement.children);
+// console.log([...h1.parentElement.children]);
+
+// [...h1.parentElement.children].forEach(function (el) {
+//   if (el !== h1) el.style.transform = 'scale(2)';
+// });
+
+// h1.lastElementChild.style.color = 'orangered';
+
+// Creating event handler to each link
+/*
+document.querySelectorAll('.nav__link').forEach(function (el) {
+  el.addEventListener('click', function (e) {
+    console.log(el.getAttribute('href'));
+    e.preventDefault();
+    const id = this.getAttribute('href');
+    console.log(id);
+    document.querySelector(id).scrollIntoView({
+      behavior: 'smooth',
+    });
+  });
+});
+*/
+// Page navigation
+
+// // Create a random color
+// const randomInt = (min, max) =>
+//   Math.floor(Math.random() * (max - min + 1) + min);
+
+// const randomColor = () =>
+//   `rgb(${randomInt(0, 255)},${randomInt(0, 255)},${randomInt(0, 255)})`;
+
+// console.log(randomColor());
+
+// document.querySelector('.nav__link').addEventListener('click', function (e) {
+//   this.style.backgroundColor = randomColor();
+//   console.log('link', e.target, e.currentTarget);
+//   // e.stopPropagation();
+// });
+
+// document.querySelector('.nav__links').addEventListener('click', function (e) {
+//   // console.log('links');
+//   this.style.backgroundColor = randomColor();
+//   console.log('links', e.target, e.currentTarget);
+// });
+
+// document.querySelector('.nav').addEventListener('click', function (e) {
+//   // this.style.color = randomColor();
+//   this.style.backgroundColor = randomColor();
+//   console.log('nav', e.target, e.currentTarget);
+// });
+
+// const h1 = document.querySelector('h1');
+// console.log(h1);
+
+// const alertH1 = function (e) {
+//   alert("Hello it's h1");
+// };
+
+// h1.addEventListener('mouseenter', alertH1);
+
+// setTimeout(() => h1.removeEventListener('mouseenter', alertH1), 3000);
+
+// console.log(sec);
+// console.log(allButtons);
+
+//message <button class="btn btn--close-cookie">Got it!
+
+// const message = document.createElement('div');
+// message.classList.add('cookie-message');
+// // message.textContent = 'hi';
+// message.innerHTML =
+//   'We use cookied for improved functionality and analytics. <button class="btn btn--close-cookie">Got it!</button>';
+// header.append(message);
+
+// document
+//   .querySelector('.btn--close-cookie')
+//   .addEventListener('click', function () {
+//     // message.remove();
+//     message.parentElement.removeChild(message);
+//   });
+
+// message.style.width = '120%';
+
+// console.log(getComputedStyle(message).height);
+// console.log(getComputedStyle(message).width);
+
+// message.style.height =
+//   Number.parseFloat(getComputedStyle(message).height, 10) + 100 + 'px';
+
+// const logo = document.querySelector('.nav__logo');
+
+// logo.alt = 'Minimals';
+
+// logo.setAttribute('designer', 'hi');
+// logo.setAttribute('comany', 'bankist');
+// console.log(logo);
+
+// console.log(logo.src);
+// console.log(logo.getAttribute('src'));
+// const tLink = document.querySelector('.twitter-link');
+
+// console.log(tLink.getAttribute('href'));
+// console.log(logo.dataset.versionNumber);
+
+// document.documentElement.style.setProperty('--color-primary', 'orangered');
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // for (let i = 0; i < btnsOpenModal.length; i++)
 //   btnsOpenModal[i].addEventListener('click', openModal);
 
+/*
 btnsOpenModal.forEach(btn => btn.addEventListener('click', openModal));
 
 btnCloseModal.addEventListener('click', closeModal);
@@ -167,6 +644,9 @@ const imgObserver = new IntersectionObserver(loadImg, {
 imgTargets.forEach(function (img) {
   imgObserver.observe(img);
 });
+*/
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*
 const revealSection = function (entries, observer) {
