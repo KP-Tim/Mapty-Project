@@ -63,14 +63,3 @@ if (navigator.geolocation.getCurrentPosition) {
   );
 }
 console.log(map);
-//https://www.google.com/maps/@34.000888,-118.2021674,15z
-
-// map.event.addListener(map, 'click', function (e) {
-//   placeMarker(e.latLng);
-// });
-// function placeMarker(location) {
-//   var marker = new google.maps.Marker({
-//     position: location,
-//     map: map,
-//   });
-// }
