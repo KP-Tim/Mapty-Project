@@ -12,7 +12,6 @@ const inputCadence = document.querySelector('.form__input--cadence');
 const inputElevation = document.querySelector('.form__input--elevation');
 
 // Start new project
-
 // Get current geo location
 if (navigator.geolocation.getCurrentPosition) {
   navigator.geolocation.getCurrentPosition(
