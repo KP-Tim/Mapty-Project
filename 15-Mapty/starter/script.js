@@ -18,9 +18,9 @@ if (navigator.geolocation.getCurrentPosition) {
     function (position) {
       const { latitude } = position.coords;
       const { longitude } = position.coords;
-      console.log(position);
-      console.log(latitude);
-      console.log(longitude);
+      // console.log(position);
+      // console.log(latitude);
+      // console.log(longitude);
 
       console.log(`https://www.google.com/maps/@${latitude},${longitude}`);
 
@@ -33,15 +33,28 @@ if (navigator.geolocation.getCurrentPosition) {
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
 
-      L.marker(coords)
-        .addTo(map)
-        .bindPopup('A pretty CSS popup.<br> Easily customizable.')
-        .openPopup();
+      // L.marker(coords)
+      //   .addTo(map)
+      //   .bindPopup('A pretty CSS popup.<br> Easily customizable.')
+      //   .openPopup();
+
       map.on('click', function (mapEvent) {
         console.log(mapEvent);
         const { lat, lng } = mapEvent.latlng;
-        console.log(lat, lng);
-        L.marker([lat, lng]).addTo(map).bindPopup('Workout').openPopup();
+        // console.log(lat, lng);
+        L.marker([lat, lng])
+          .addTo(map)
+          .bindPopup(
+            L.popup({
+              maxHeight: 250,
+              minWidth: 100,
+              autoClose: false,
+              closeOnClick: false,
+              className: 'running-popup',
+            })
+          )
+          .setPopupContent('Workout')
+          .openPopup();
       });
     },
     function () {
@@ -49,7 +62,7 @@ if (navigator.geolocation.getCurrentPosition) {
     }
   );
 }
-console.log(map);
+
 //https://www.google.com/maps/@34.000888,-118.2021674,15z
 
 // map.event.addListener(map, 'click', function (e) {
