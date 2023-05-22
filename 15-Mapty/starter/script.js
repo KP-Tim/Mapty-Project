@@ -18,6 +18,12 @@ if (navigator.geolocation.getCurrentPosition) {
   navigator.geolocation.getCurrentPosition(
     function (position) {
       console.log(position);
+      console.log(position);
+      console.log(position);
+      console.log(position);
+      console.log(position);
+      console.log(position);
+      console.log(position);
       const { latitude } = position.coords;
       const { longitude } = position.coords;
       // console.log(position);
