@@ -19,14 +19,14 @@ if (navigator.geolocation.getCurrentPosition) {
     function (position) {
       const { latitude } = position.coords;
       const { longitude } = position.coords;
-      console.log(position);
-      console.log(latitude);
-      console.log(longitude);
+      // console.log(position);
+      // console.log(latitude);
+      // console.log(longitude);
 
       console.log(`https://www.google.com/maps/@${latitude},${longitude}`);
 
       const coords = [latitude, longitude];
-
+      // console.log(coords);
       map = L.map('map').setView(coords, 13);
       // console.log(map);
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -47,6 +47,8 @@ if (navigator.geolocation.getCurrentPosition) {
         inputDistance.focus();
 
         const { lat, lng } = mapEvent.latlng;
+        console.log(mapEvent.latlng);
+        console.log(lat, lng);
         // console.log(lat, lng);
         // L.marker([lat, lng])
         //   .addTo(map)
@@ -71,6 +73,14 @@ if (navigator.geolocation.getCurrentPosition) {
 
 form.addEventListener('submit', function (e) {
   e.preventDefault();
+
+  // Clear input fields
+  inputDistance.value =
+    inputCadence.value =
+    inputDuration.value =
+    inputElevation.value =
+      ' ';
+
   console.log(map);
   const { lat, lng } = mapEvent.latlng;
   console.log(mapEvent);
@@ -87,6 +97,11 @@ form.addEventListener('submit', function (e) {
     )
     .setPopupContent('Workout')
     .openPopup();
+});
+
+inputType.addEventListener('change', function () {
+  inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
+  inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
 });
 
 //https://www.google.com/maps/@34.000888,-118.2021674,15z
