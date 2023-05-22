@@ -17,18 +17,11 @@ let map, mapEvent;
 if (navigator.geolocation.getCurrentPosition) {
   navigator.geolocation.getCurrentPosition(
     function (position) {
-      console.log(position);
-      console.log(position);
-      console.log(position);
-      console.log(position);
-      console.log(position);
-      console.log(position);
-      console.log(position);
       const { latitude } = position.coords;
       const { longitude } = position.coords;
-      // console.log(position);
-      // console.log(latitude);
-      // console.log(longitude);
+      console.log(position);
+      console.log(latitude);
+      console.log(longitude);
 
       console.log(`https://www.google.com/maps/@${latitude},${longitude}`);
 
