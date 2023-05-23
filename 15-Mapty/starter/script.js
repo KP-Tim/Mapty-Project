@@ -75,8 +75,8 @@ form.addEventListener('submit', function (e) {
   e.preventDefault();
 
   // Clear input fields
-  inputDistance.value =
-    inputCadence.value =
+  inputCadence.value =
+    inputDistance.value =
     inputDuration.value =
     inputElevation.value =
       ' ';
@@ -98,11 +98,25 @@ form.addEventListener('submit', function (e) {
     .setPopupContent('Workout')
     .openPopup();
 });
-
+// Added inputType change
 inputType.addEventListener('change', function () {
   inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
   inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
 });
+
+// class App () {
+//   constructor(){}
+//   _getPosition(){}
+//   _loadMap(){}
+//   _showForm(){}
+//   _toggleElevationField(){}
+//   _newWorkout(){}
+// }
+
+// inputType.addEventListener('change', function () {
+//   inputElevation.closest('.form__row').classList.toggle('form__row--hidden');
+//   inputCadence.closest('.form__row').classList.toggle('form__row--hidden');
+// });
 
 //https://www.google.com/maps/@34.000888,-118.2021674,15z
 
